@@ -23,7 +23,6 @@ steps:
     packageType: 'sdk'
     version: $(dotnet_version)
   
-
 - task: Bash@3
   displayName: Install MAUI workloads
   inputs:
@@ -37,3 +36,16 @@ steps:
   inputs:
     targetType: 'inline'
     script: 'ls'
+
+- task: Bash@3
+  displayName: Build windows MAUI app
+  inputs:
+    targetType: 'inline'
+    script: |
+      dotnet publish maui_pipeline/MAUITestApp/MAUITestApp.csproj -f net9.0-windows10.0.19041.0 -c Release --output '$(Build.ArtifactStagingDirectory)/Windows'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Windows app to artifacts' 
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)/windows'
+    ArtifactName: 'Windows'
