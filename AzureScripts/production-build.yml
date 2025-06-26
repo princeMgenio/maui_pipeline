@@ -29,7 +29,7 @@ steps:
     targetType: 'inline'
     script: |
       dotnet nuget locals all --clear
-      dotnet workload install android ios maui --source https://aka.ms/dotnet9/nuget/index.json --source https://api.nuget.org/v3/index.json 
+      dotnet workload install android ios maui --source https://api.nuget.org/v3/index.json
 
 - task: Bash@3
   displayName: Show current working directory
@@ -42,7 +42,7 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      dotnet publish maui_pipeline/MAUITestApp/MAUITestApp.csproj -f net9.0-windows10.0.19041.0 -c Release --output '$(Build.ArtifactStagingDirectory)/Windows'
+      dotnet publish MAUITestApp/MAUITestApp.csproj -f net9.0-windows10.0.19041.0 -c Release --output '$(Build.ArtifactStagingDirectory)/Windows'
 
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Windows app to artifacts' 
