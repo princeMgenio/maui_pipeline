@@ -44,12 +44,26 @@ stages:
         steps:
         - template: setup_template.yml
 
+        - task: DownloadSecureFile@1
+          name: keystore_file
+          displayName: Download Keystore File
+          inputs:
+            secureFile: 'myapp.keystore'
+
+        - task: CopyFiles@2
+          name: copy_keystore_file
+          displayName: Import Secure File
+          inputs:
+            SourceFolder: $(Agent.TempDirectory)
+            Contents: 'myapp.keystore'
+            TargetFolder: MAUITestApp
+
         - task: Bash@3
           displayName: Build Android MAUI app
           inputs:
             targetType: 'inline'
             script: |
-                  dotnet publish MAUITestApp/MAUITestApp.csproj -f net9.0-android -c Release --output '$(Build.ArtifactStagingDirectory)/Android'
+                  dotnet publish MAUITestApp/MAUITestApp.csproj -f net9.0-android -c Release --output '$(Build.ArtifactStagingDirectory)/Android' -p:AndroidKeyStore=true -p:AndroidSigningKeyStore=myapp.keystore -p:AndroidSigningKeyAlias=myapp -p:AndroidSigningKeyPass=$(keystore_password) -p:AndroidSigningStorePass={keystore_password}
 
         - task: PublishBuildArtifacts@1
           displayName: 'Publish Android app to artifacts' 
