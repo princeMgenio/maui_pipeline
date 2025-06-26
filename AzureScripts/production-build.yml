@@ -17,7 +17,6 @@ stages:
   - stage: windows_android_stage
     displayName: Windows and Android stages
     pool:
-      name: Azure Pipeline
       vmImage: windows-latest
     jobs:
       - job: windows_job
