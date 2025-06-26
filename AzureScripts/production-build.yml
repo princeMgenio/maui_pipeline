@@ -63,7 +63,7 @@ stages:
           inputs:
             targetType: 'inline'
             script: |
-                  dotnet publish MAUITestApp/MAUITestApp.csproj -f net9.0-android -c Release --output '$(Build.ArtifactStagingDirectory)/Android' -p:AndroidKeyStore=true -p:AndroidSigningKeyStore=myapp.keystore -p:AndroidSigningKeyAlias=myapp -p:AndroidSigningKeyPass=$(keystore_password) -p:AndroidSigningStorePass={keystore_password}
+                  dotnet publish MAUITestApp/MAUITestApp.csproj -f net9.0-android -c Release --output '$(Build.ArtifactStagingDirectory)/Android' -p:AndroidKeyStore=true -p:AndroidSigningKeyStore=myapp.keystore -p:AndroidSigningKeyAlias=myapp -p:AndroidSigningKeyPass=$(keystore_password) -p:AndroidSigningStorePass=$(keystore_password)
 
         - task: PublishBuildArtifacts@1
           displayName: 'Publish Android app to artifacts' 
