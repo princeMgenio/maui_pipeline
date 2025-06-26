@@ -13,39 +13,47 @@ trigger:
 variables:
   - group: PipelineVariables
 
-pool:
-  vmImage: windows-latest
+stages:
+  - stage: windows_android_stage
+    displayName: Windows and Android stages
+    pool:
+      name: Azure Pipeline
+      vmImage: windows-latest
+    jobs:
+      - job: windows_job
+        displayName: Windows job
+        steps:
+        - template: setup_template.yml
 
-steps:
-- task: UseDotNet@2
-  displayName: Set .NET version
-  inputs:
-    packageType: 'sdk'
-    version: $(dotnet_version)
-  
-- task: Bash@3
-  displayName: Install MAUI workloads
-  inputs:
-    targetType: 'inline'
-    script: |
-      dotnet nuget locals all --clear
-      dotnet workload install android ios maui --source https://api.nuget.org/v3/index.json
+        - task: Bash@3
+          displayName: Build Windows MAUI app
+          inputs:
+            targetType: 'inline'
+            script: |
+              dotnet publish MAUITestApp/MAUITestApp.csproj -f net9.0-windows10.0.19041.0 -c Release --output '$(Build.ArtifactStagingDirectory)/Windows'
 
-- task: Bash@3
-  displayName: Show current working directory
-  inputs:
-    targetType: 'inline'
-    script: 'ls'
+        - task: PublishBuildArtifacts@1
+          displayName: 'Publish Windows app to artifacts' 
+          inputs:
+            PathtoPublish: '$(Build.ArtifactStagingDirectory)/windows'
+            ArtifactName: 'Windows'
 
-- task: Bash@3
-  displayName: Build windows MAUI app
-  inputs:
-    targetType: 'inline'
-    script: |
-      dotnet publish MAUITestApp/MAUITestApp.csproj -f net9.0-windows10.0.19041.0 -c Release --output '$(Build.ArtifactStagingDirectory)/Windows'
+      - job: android_job
+        dependsOn:
+          - windows_job
+        displayName: Android job
+        steps:
+        - template: setup_template.yml
 
-- task: PublishBuildArtifacts@1
-  displayName: 'Publish Windows app to artifacts' 
-  inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)/windows'
-    ArtifactName: 'Windows'
+        - task: Bash@3
+          displayName: Build Android MAUI app
+          inputs:
+            targetType: 'inline'
+            script: |
+                  dotnet publish MAUITestApp/MAUITestApp.csproj -f net9.0-android -c Release --output '$(Build.ArtifactStagingDirectory)/Android'
+
+        - task: PublishBuildArtifacts@1
+          displayName: 'Publish Android app to artifacts' 
+          inputs:
+            PathtoPublish: '$(Build.ArtifactStagingDirectory)/android'
+            ArtifactName: 'Android'
