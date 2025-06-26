@@ -14,7 +14,7 @@ variables:
   - group: PipelineVariables
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: windows-latest
 
 steps:
 - task: UseDotNet@2
@@ -29,7 +29,7 @@ steps:
     targetType: 'inline'
     script: |
       dotnet nuget locals all --clear
-      dotnet workload install android maui --source https://aka.ms/dotnet9/nuget/index.json --source https://api.nuget.org/v3/index.json
+      dotnet workload install android ios maui --source https://aka.ms/dotnet9/nuget/index.json --source https://api.nuget.org/v3/index.json 
 
 - task: Bash@3
   displayName: Show current working directory
