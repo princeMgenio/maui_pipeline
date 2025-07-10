@@ -14,6 +14,39 @@ variables:
   - group: PipelineVariables
 
 stages:
+  # - stage: ios_stage
+  #   displayName: Ios stage
+  #   pool:
+  #     vmImage: macOS-13
+  #   jobs:
+  #     - job: ios_job
+  #       displayName: Ios job
+  #       steps:
+  #         - template: setup_template.yml
+  #         - task: InstallAppleProvisioningProfile@1
+  #           inputs:
+  #             provisioningProfileLocation: 'secureFiles'
+  #             provProfileSecureFile: appalchemy.mobileprovision
+          
+  #         - task: InstallAppleCertificate@2
+  #           inputs:
+  #             certSecureFile: distribution.p12
+  #             keychain: 'temp' 
+  #             certPwd: $(ios_distribution_password)
+
+  #         - task: Bash@3
+  #           displayName: Build iOS MAUI app
+  #           inputs:
+  #             targetType: 'inline'
+  #             script: |
+  #               dotnet publish MAUITestApp/MAUITestApp.csproj -f net9.0-ios -c Release --output '$(Build.ArtifactStagingDirectory)/IOS' -p:ArchiveOnBuild=true -p:RuntimeIdentifier=ios-arm64 -p:CodesignKey="$(codesign_key)" -p:CodesignProvision="$(codesign_provision)"
+
+  #         - task: PublishBuildArtifacts@1
+  #           displayName: 'Publish IOS app to artifacts' 
+  #           inputs:
+  #             PathtoPublish: '$(Build.ArtifactStagingDirectory)/ios'
+  #             ArtifactName: 'ios'
+
   - stage: windows_android_stage
     displayName: Windows and Android stages
     pool:
