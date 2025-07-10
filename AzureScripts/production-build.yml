@@ -5,7 +5,7 @@
 
 # specific branch build with batching
 trigger:
-  batch: true
+  batch: false
   branches:
     include:
     - main
